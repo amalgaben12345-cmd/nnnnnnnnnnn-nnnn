@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة تحدي تشريح العظام 💀💪</title>
+    <style>
+        :root {
+            --primary-color: #34495e;
+            --accent-color: #27ae60;
+            --danger-color: #c0392b;
+            --bg-color: #f4f6f7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 10px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* الشاشة الرئيسية */
+        #home-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-btn {
+            background-color: white;
+            border: 2px solid var(--primary-color);
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .section-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* شاشة اللعبة */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            background-color: #7f8c8d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .image-scroll-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 450px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .image-container {
+            position: relative;
+            width: 750px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* الأرقام الدائرية فوق الصورة بجانب الأسهم */
+        .map-number {
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+
+        /* قسم قائمة الأسئلة بالأرقام في الأسفل */
+        .questions-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .questions-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .questions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .question-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9fa;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .q-num {
+            background: #e74c3c;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .question-row select {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: white;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #result-box {
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .question-row.correct-row {
+            background-color: #d4edda !important;
+            border-color: #27ae60;
+        }
+
+        .question-row.incorrect-row {
+            background-color: #f8d7da !important;
+            border-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>لعبة تحدي تشريح العظام 💀💪</h1>
+    </header>
+
+    <div id="home-screen">
+        <button class="section-btn" onclick="startGame('thorax')">القفص الصدري (The Bony Thorax)</button>
+        <button class="section-btn" onclick="startGame('pelvis')">عظام الحوض (Pelvic Girdle)</button>
+        <button class="section-btn" onclick="startGame('spine')">العمود الفقري (Spinal Curves)</button>
+        <button class="section-btn" onclick="startGame('skull_lateral')">الجمجمة - الجانبية (Skull Lateral View)</button>
+        <button class="section-btn" onclick="startGame('skull_posterior')">الجمجمة - من الخلف (Skull Posterior View)</button>
+    </div>
+
+    <div id="game-screen">
+        <div class="game-header">
+            <span id="section-title" style="font-weight: bold; font-size: 0.9rem;">العنوان</span>
+            <button class="back-btn" onclick="goHome()">العودة للقائمة 🔙</button>
+        </div>
+
+        <div class="image-scroll-wrapper">
+            <div class="image-container" id="img-container">
+            </div>
+        </div>
+
+        <div class="questions-container">
+            <div class="questions-title">اختر الإجابة الصحيحة لكل رقم يطابق السهم على الرسمة 📋:</div>
+            <div class="questions-list" id="questions-list"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-submit" onclick="checkAnswers()">خلصنا.. اعطيني النتيجة! 🎯</button>
+            <button class="btn-reset" onclick="resetGame()">إعادة 🔄</button>
+        </div>
+
+        <div id="result-box"></div>
+    </div>
+</div>
+
+<script>
+    const sectionsData = {
+        thorax: {
+            title: "The Bony Thorax (القفص الصدري)",
+            image: "thorax.jpg.jpg",
+            zones: [
+                { id: 1, label: "Jugular notch", top: "24%", left: "55%" },
+                { id: 2, label: "Clavicular notch", top: "27%", left: "60%" },
+                { id: 3, label: "Manubrium", top: "33%", left: "66%" },
+                { id: 4, label: "Sternal angle", top: "36%", left: "65%" },
+                { id: 5, label: "Body", top: "39%", left: "62%" },
+                { id: 6, label: "Xiphisternal joint", top: "42%", left: "64%" },
+                { id: 7, label: "Xiphoid process", top: "46%", left: "65%" },
+                { id: 8, label: "Intercostal spaces", top: "51%", left: "65%" },
+                { id: 9, label: "Costal cartilage", top: "77%", left: "66%" },
+                { id: 10, label: "Costal margin", top: "82%", left: "65%" },
+                { id: 11, label: "True ribs (1-7)", top: "45%", left: "15%" },
+                { id: 12, label: "False ribs (8-12)", top: "67%", left: "15%" },
+                { id: 13, label: "Floating ribs (11, 12)", top: "89%", left: "30%" }
+            ]
+        },
+        pelvis: {
+            title: "Pelvic Girdle (عظام الحوض)",
+            image: "pelvis.jpg.jpg",
+            zones: [
+                { id: 1, label: "SACRUM", top: "25%", left: "71%" },
+                { id: 2, label: "COCCYX", top: "42%", left: "70%" },
+                { id: 3, label: "ILIUM", top: "55%", left: "69%" },
+                { id: 4, label: "PUBIS", top: "72%", left: "69%" },
+                { id: 5, label: "ISCHIUM", top: "86%", left: "69%" }
+            ]
+        },
+        spine: {
+            title: "Spinal Curves (العمود الفقري)",
+            image: "spine.jpg.jpg",
+            zones: [
+                { id: 1, label: "Cervical", top: "13%", left: "16%" },
+                { id: 2, label: "Thoracic", top: "38%", left: "16%" },
+                { id: 3, label: "Lumbar", top: "61%", left: "16%" },
+                { id: 4, label: "Sacral", top: "77%", left: "16%" },
+                { id: 5, label: "Coccygeal", top: "84%", left: "16%" }
+            ]
+        },
+        skull_lateral: {
+            title: "Skull - Lateral View (الجمجمة الجانبية)",
+            image: "skull_lateral.jpg.jpg",
+            zones: [
+                { id: 1, label: "Frontal bone", top: "10%", left: "91%" },
+                { id: 2, label: "Sphenoid bone (greater wing)", top: "16%", left: "93%" },
+                { id: 3, label: "Ethmoid bone", top: "22%", left: "91%" },
+                { id: 4, label: "Lacrimal bone", top: "26%", left: "91%" },
+                { id: 5, label: "Lacrimal fossa", top: "30%", left: "91%" },
+                { id: 6, label: "Nasal bone", top: "48%", left: "90%" },
+                { id: 7, label: "Zygomatic bone", top: "57%", left: "92%" },
+                { id: 8, label: "Maxilla", top: "62%", left: "89%" },
+                { id: 9, label: "Alveolar margins", top: "75%", left: "83%" },
+                { id: 10, label: "Mandible", top: "84%", left: "82%" },
+                { id: 11, label: "Mental foramen", top: "88%", left: "82%" },
+                { id: 12, label: "Coronoid process", top: "96%", left: "82%" },
+                { id: 13, label: "Mandibular angle", top: "96%", left: "55%" },
+                { id: 14, label: "Mandibular ramus", top: "90%", left: "37%" },
+                { id: 15, label: "Mandibular notch", top: "85%", left: "36%" },
+                { id: 16, label: "Mandibular condyle", top: "80%", left: "36%" },
+                { id: 17, label: "Styloid process", top: "76%", left: "22%" },
+                { id: 18, label: "Mastoid process", top: "72%", left: "21%" },
+                { id: 19, label: "External acoustic meatus", top: "67%", left: "16%" },
+                { id: 20, label: "Occipitomastoid suture", top: "62%", left: "18%" },
+                { id: 21, label: "Zygomatic process", top: "56%", left: "17%" },
+                { id: 22, label: "Occipital bone", top: "50%", left: "14%" },
+                { id: 23, label: "Squamous suture", top: "45%", left: "14%" },
+                { id: 24, label: "Lambdoid suture", top: "37%", left: "14%" },
+                { id: 25, label: "Temporal bone", top: "26%", left: "14%" },
+                { id: 26, label: "Parietal bone", top: "17%", left: "14%" },
+                { id: 27, label: "Coronal suture", top: "10%", left: "14%" }
+            ]
+        },
+        skull_posterior: {
+            title: "Skull - Posterior View (الجمجمة من الخلف)",
+            image: "skull_posterior.jpg.jpg",
+            zones: [
+                { id: 1, label: "Parietal bone", top: "17%", left: "85%" },
+                { id: 2, label: "Sagittal suture", top: "13%", left: "67%" },
+                { id: 3, label: "Sutural bone", top: "26%", left: "30%" },
+                { id: 4, label: "Lambdoid suture", top: "38%", left: "22%" },
+                { id: 5, label: "Occipital bone", top: "48%", left: "22%" },
+                { id: 6, label: "Superior nuchal line", top: "62%", left: "26%" },
+                { id: 7, label: "External occipital protuberance", top: "67%", left: "18%" },
+                { id: 8, label: "Occipitomastoid suture", top: "86%", left: "25%" },
+                { id: 9, label: "External occipital crest", top: "95%", left: "41%" },
+                { id: 10, label: "Occipital condyle", top: "90%", left: "59%" },
+                { id: 11, label: "Inferior nuchal line", top: "79%", left: "79%" },
+                { id: 12, label: "Mastoid process", top: "76%", left: "83%" }
+            ]
+        }
+    };
+
+    let currentSection = null;
+
+    function startGame(sectionKey) {
+        currentSection = sectionsData[sectionKey];
+
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        document.getElementById('section-title').innerText = currentSection.title;
+        document.getElementById('result-box').style.display = 'none';
+
+        const imgContainer = document.getElementById('img-container');
+        imgContainer.innerHTML = `<img src="${currentSection.image}" alt="Anatomy Image">`;
+
+        // وضع الدوائر المرقمة على الصورة
+        currentSection.zones.forEach(zone => {
+            const numEl = document.createElement('div');
+            numEl.className = 'map-number';
+            numEl.innerText = zone.id;
+            numEl.style.top = zone.top;
+            numEl.style.left = zone.left;
+            imgContainer.appendChild(numEl);
+        });
+
+        renderQuestions();
+    }
+
+    function renderQuestions() {
+        const listContainer = document.getElementById('questions-list');
+        listContainer.innerHTML = '';
+
+        // إنشاء خيارات عشوائية للاختيار من متعدد لكل رقم
+        let allLabels = currentSection.zones.map(z => z.label);
+
+        currentSection.zones.forEach(zone => {
+            let shuffledOptions = [...allLabels].sort(() => Math.random() - 0.5);
+
+            const row = document.createElement('div');
+            row.className = 'question-row';
+            row.dataset.id = zone.id;
+
+            let optionsHTML = `<option value="">-- اختر الإجابة لرقم ${zone.id} --</option>`;
+            shuffledOptions.forEach(opt => {
+                optionsHTML += `<option value="${opt}">${opt}</option>`;
+            });
+
+            row.innerHTML = `
+                <div class="q-num">${zone.id}</div>
+                <select data-id="${zone.id}">
+                    ${optionsHTML}
+                </select>
+            `;
+            listContainer.appendChild(row);
+        });
+    }
+
+    function checkAnswers() {
+        let correctCount = 0;
+        let total = currentSection.zones.length;
+
+        currentSection.zones.forEach(zone => {
+            const rowEl = document.querySelector(`.question-row[data-id="${zone.id}"]`);
+            const selectEl = rowEl.querySelector('select');
+            const userAns = selectEl.value;
+
+            if (userAns === zone.label) {
+                rowEl.className = 'question-row correct-row';
+                correctCount++;
+            } else {
+                rowEl.className = 'question-row incorrect-row';
+            }
+        });
+
+        const resultBox = document.getElementById('result-box');
+        resultBox.style.display = 'block';
+        if (correctCount === total) {
+            resultBox.style.backgroundColor = '#d4edda';
+            resultBox.style.color = '#155724';
+            resultBox.innerText = `🔥 كفوو! إجاباتك صحيحة مية بالمية! نتيجتك: ${correctCount} من ${total} 🌟`;
+        } else {
+            resultBox.style.backgroundColor = '#f8d7da';
+            resultBox.style.color = '#721c24';
+            resultBox.innerText = `⚠️ خلصت التدريب. نتيجتك: ${correctCount} من ${total} (شوف الأسئلة الملونة بالأحمر وعدلها)`;
+        }
+    }
+
+    function resetGame() {
+        let currentKey = Object.keys(sectionsData).find(key => sectionsData[key].title === currentSection.title);
+        startGame(currentKey);
+    }
+
+    function goHome() {
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('home-screen').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
